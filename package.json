@@ -1,0 +1,20 @@
+{
+  "name": "devspot-search-tools",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@langchain/cloudflare": "^0.0.6",
+    "@langchain/groq": "^0.0.10",
+    "@langchain/openai": "^0.0.33",
+    "express": "^4.19.2",
+    "googleapis": "^137.1.0",
+    "langchain": "^0.1.37",
+    "serpapi": "^2.1.0"
+  }
+}
