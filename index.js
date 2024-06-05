@@ -1,5 +1,4 @@
 import express from "express";
-import { mockData } from "./guiBibeau";
 import { GithubSearchTool } from "./tools/GithubSearchTool";
 import { GoogleSearchTool } from "./tools/GoogleSearchTool";
 import { SummaryPipeline } from "./pipeline/searchSummaryPipeline";
