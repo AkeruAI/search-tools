@@ -1,13 +1,10 @@
 import { google } from "googleapis";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 
-import { SearchTool } from "./SearchTool";
-import { mistralGroq, mistral3bCloudflare } from '../chat-models/mistral-7b-instruct'
 import { gpt3point5 } from "../chat-models/gpt-3.5";
 
-export class GoogleSearchTool extends SearchTool {
+export class GoogleSearchTool {
   constructor() {
-    super("GoogleSearchTool");
     this.model = gpt3point5;
   }
 

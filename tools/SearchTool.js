@@ -9,9 +9,3 @@ export class SearchTool {
   }
 
 
-  /**
-   * Represents a Search Tool Summary.
-   * @typedef {Object} Summary
-   * @property {string} toolName - The name of the tool that was run
-   * @property {string} results - the textual summary of the search tool used
-   */

@@ -1,12 +1,9 @@
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 
-import { SearchTool } from "./SearchTool";
 import { gpt3point5 } from "../chat-models/gpt-3.5";
-import { mistralGroq, mistral3bCloudflare } from '../chat-models/mistral-7b-instruct'
 
-export class GithubSearchTool extends SearchTool {
+export class GithubSearchTool {
   constructor() {
-    super("GithubSearchTool");
     this.model = gpt3point5
   }
 
