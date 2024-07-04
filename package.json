@@ -1,6 +1,6 @@
 {
-  "name": "devspot-search-tools",
-  "module": "index.ts",
+  "name": "search-tools",
+  "module": "index.js",
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest"
