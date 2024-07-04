@@ -2,37 +2,15 @@ import express from "express";
 import { GithubSearchTool } from "./tools/GithubSearchTool";
 import { GoogleSearchTool } from "./tools/GoogleSearchTool";
 import { SummaryPipeline } from "./pipeline/searchSummaryPipeline";
-import swaggerJsdoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./lib/swagger";
+import { port } from "./lib/serverConfig";
 
 const app = express();
-const port = 3000;
 
 const githubSearchTool = new GithubSearchTool();
 const googleSearchTool = new GoogleSearchTool();
 const summaryPipeline = new SummaryPipeline();
-
-// Swagger definition
-const swaggerDefinition = {
-  openapi: "3.0.0",
-  info: {
-    title: "API Documentation",
-    version: "1.0.0",
-    description: "API documentation for the summarization service",
-  },
-  servers: [
-    {
-      url: `http://localhost:${port}`,
-    },
-  ],
-};
-
-const options = {
-  swaggerDefinition,
-  apis: ["./index.js"], // files containing annotations as above
-};
-
-const swaggerSpec = swaggerJsdoc(options);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
