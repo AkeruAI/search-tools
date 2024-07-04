@@ -15,6 +15,11 @@
     "express": "^4.19.2",
     "googleapis": "^137.1.0",
     "langchain": "^0.1.37",
-    "serpapi": "^2.1.0"
+    "serpapi": "^2.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "scripts": {
+    "dev": "bun run --watch index.js"
   }
 }

@@ -12,7 +12,7 @@ export class SummaryPipeline {
    * @param {Array<import('../tools/SearchTool').Summary>} summaries
    */
   async summarizeExistingJobs(summaries) {
-    // in cas some promises failed we want to summarize the rest
+    // in case some promises failed we want to summarize the rest
     const completedSummaries = summaries.filter(Boolean);
     const toolsNameList = completedSummaries
       .map(({ toolName }) => toolName)
@@ -24,7 +24,6 @@ export class SummaryPipeline {
       `;
     });
 
-
     const prompt = ChatPromptTemplate.fromMessages([
       [
         "system",
@@ -35,7 +34,7 @@ export class SummaryPipeline {
         `I ran a few searches in this order {order}.  Here are the results. Do not name each:
        {result}
        
-       Your final report should not name each seach tool but instead combine the information from each in a single naturally flowing report. The report should feel factual, example: "Gui Bibeau is an expert in JavaScript
+       Your final report should not name each search tool but instead combine the information from each in a single naturally flowing report. The report should feel factual, example: "Gui Bibeau is an expert in JavaScript
       `,
       ],
     ]);
@@ -44,7 +43,6 @@ export class SummaryPipeline {
       order: JSON.stringify(toolsNameList),
       result: JSON.stringify(tollSummaryMap),
     });
-
     return response.content;
   }
 }

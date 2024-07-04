@@ -1,5 +1,4 @@
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-
 import { gpt3point5 } from "../chat-models/gpt-3.5";
 
 export class GithubSearchTool {
@@ -56,10 +55,11 @@ export class GithubSearchTool {
         userData: JSON.stringify(userData),
         reposData: JSON.stringify(reposData),
       });
+
       return {
         toolName: this.name,
         results: response.content
-      }
+      };
     } catch (e) {
       console.error(e);
     }

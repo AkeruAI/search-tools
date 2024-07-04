@@ -1,6 +1,5 @@
 import { google } from "googleapis";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-
 import { gpt3point5 } from "../chat-models/gpt-3.5";
 
 export class GoogleSearchTool {
