@@ -10,16 +10,18 @@
   },
   "dependencies": {
     "@langchain/cloudflare": "^0.0.6",
-    "@langchain/groq": "^0.0.10",
+    "@langchain/groq": "^0.0.17",
     "@langchain/openai": "^0.0.33",
+    "@octokit/types": "^13.5.0",
     "express": "^4.19.2",
     "googleapis": "^137.1.0",
     "langchain": "^0.1.37",
     "serpapi": "^2.1.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "zod": "^3.23.8"
   },
   "scripts": {
-    "dev": "bun run --watch index.js"
+    "dev": "bun run --watch index.ts"
   }
 }

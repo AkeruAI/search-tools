@@ -18,7 +18,7 @@ const swaggerDefinition = {
 
 export const options = {
   swaggerDefinition,
-  apis: ["./index.js"], // files containing annotations as above
+  apis: ["./index.ts"], // files containing annotations as above
 };
 
 export const swaggerSpec = swaggerJsdoc(options);
