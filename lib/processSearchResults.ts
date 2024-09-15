@@ -32,80 +32,87 @@ export type ProcessingOptions = {
 };
 
 // Function to check if a date is valid
-function isValidDate(date: Date): boolean {
-  return !isNaN(date.getTime());
-}
+const isValidDate = (date: Date): boolean => !isNaN(date.getTime());
 
 // Function to parse a date string
-function parseDate(dateString: string): Date | null {
-  // Try parsing as ISO date
-  let date = new Date(dateString);
+const parseDate = (dateString: string): Date | null => {
+  const date = new Date(dateString);
   if (isValidDate(date)) return date;
 
-  // Try parsing common formats
   const formats = [
-    /(\d{4})-(\d{2})-(\d{2})/, // YYYY-MM-DD
-    /(\d{2})\/(\d{2})\/(\d{4})/, // MM/DD/YYYY
-    /(\w+)\s(\d{1,2}),\s(\d{4})/, // Month DD, YYYY
+    {
+      regex: /(\d{4})-(\d{2})-(\d{2})/, // YYYY-MM-DD
+      parser: (match: RegExpMatchArray) =>
+        new Date(+match[1], +match[2] - 1, +match[3]),
+    },
+    {
+      regex: /(\d{2})\/(\d{2})\/(\d{4})/, // MM/DD/YYYY
+      parser: (match: RegExpMatchArray) =>
+        new Date(+match[3], +match[1] - 1, +match[2]),
+    },
+    {
+      regex: /(\w+)\s(\d{1,2}),\s(\d{4})/, // Month DD, YYYY
+      parser: (match: RegExpMatchArray) =>
+        new Date(`${match[1]} ${match[2]}, ${match[3]}`),
+    },
   ];
 
-  for (const format of formats) {
-    const match = dateString.match(format);
-    if (match) {
-      const [_, year, month, day] = match;
-      date = new Date(+year, +month - 1, +day);
-      if (isValidDate(date)) return date;
-    }
-  }
+  const parsedDate = formats
+    .map(({ regex, parser }) => {
+      const match = dateString.match(regex);
+      if (match) {
+        const date = parser(match);
+        return isValidDate(date) ? date : null;
+      }
+      return null;
+    })
+    .find((date): date is Date => date !== null);
 
-  // If all parsing attempts fail, return null
-  return null;
-}
+  return parsedDate || null;
+};
 
 // Function to extract the most reliable date from a SearchResult
-function extractReliableDate(result: SearchResult): Date {
+const extractReliableDate = (result: SearchResult): Date => {
   const dateCandidates = [
     result.page_age,
     result.age,
     result.article?.date,
-  ].filter(Boolean);
+  ].filter(Boolean) as string[];
 
-  for (const dateString of dateCandidates) {
-    const parsedDate = parseDate(dateString!);
-    if (parsedDate) return parsedDate;
-  }
+  const parsedDate = dateCandidates
+    .map((dateString) => parseDate(dateString))
+    .find((date): date is Date => date !== null);
 
-  // If all parsing attempts fail, return current date
-  return new Date();
-}
+  return parsedDate || new Date();
+};
 
 // Main function to process the search results
-export function processSearchResults(
+export const processSearchResults = (
   searchResults: SearchResult[],
   options: ProcessingOptions = {}
-): ProcessedResult[] {
+): ProcessedResult[] => {
   const { maxResults = 10, minSnippets = 2 } = options;
 
-  // Remove duplicates
-  const uniqueResults = searchResults.reduce((unique, item) => {
-    return unique.find((u) => u.url === item.url) ? unique : [...unique, item];
-  }, [] as SearchResult[]);
+  const uniqueResults = [
+    ...new Map(searchResults.map((item) => [item.url, item])).values(),
+  ];
 
-  // Map and sort results
   const mappedResults = uniqueResults
-    .map((result) => ({
-      title: result.title,
-      source: result.profile.name,
-      url: result.url,
-      date: extractReliableDate(result).toISOString().split("T")[0], // YYYY-MM-DD format
-      summary: result.description,
-      keyPoints: result.extra_snippets.slice(0, minSnippets),
-      sortDate: extractReliableDate(result),
-    }))
+    .map((result) => {
+      const reliableDate = extractReliableDate(result);
+      return {
+        title: result.title,
+        source: result.profile.name,
+        url: result.url,
+        date: reliableDate.toISOString().split("T")[0], // YYYY-MM-DD format
+        summary: result.description,
+        keyPoints: result.extra_snippets.slice(0, minSnippets),
+        sortDate: reliableDate,
+      };
+    })
     .sort((a, b) => b.sortDate.getTime() - a.sortDate.getTime());
 
-  // Return top results
   return mappedResults
     .slice(0, maxResults)
     .map(({ sortDate, ...rest }) => rest);
-}
+};

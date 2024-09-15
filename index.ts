@@ -1,10 +1,40 @@
 import express from "express";
+import cors from "cors";
 import { SummaryTool } from "./tools/QroqSearchTool";
 import { gaia3point1 } from "./chat-models/gaia-llama3point1";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./lib/swagger";
 import { port } from "./lib/serverConfig";
+
 const app = express();
+
+app.use(cors());
+
+function authenticateAPIKey(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) {
+  const exemptPaths = ["/", "/api-docs"];
+  if (exemptPaths.some((path) => req.path.startsWith(path))) {
+    return next();
+  }
+
+  const authHeader = req.headers["authorization"];
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Missing or invalid API key" });
+  }
+
+  const apiKey = authHeader.slice("Bearer ".length).trim();
+
+  if (apiKey !== process.env.API_KEY) {
+    return res.status(403).json({ error: "Invalid API key" });
+  }
+
+  next();
+}
+
+app.use(authenticateAPIKey);
 
 const groqSearchTool = new SummaryTool(gaia3point1);
 
