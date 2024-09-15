@@ -16,7 +16,7 @@ function authenticateAPIKey(
   next: express.NextFunction
 ) {
   const exemptPaths = ["/", "/api-docs"];
-  if (exemptPaths.some((path) => req.path.startsWith(path))) {
+  if (exemptPaths.includes(req.path)) {
     return next();
   }
 
