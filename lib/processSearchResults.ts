@@ -106,7 +106,7 @@ export const processSearchResults = (
         url: result.url,
         date: reliableDate.toISOString().split("T")[0], // YYYY-MM-DD format
         summary: result.description,
-        keyPoints: result.extra_snippets.slice(0, minSnippets),
+        keyPoints: result.extra_snippets?.slice(0, minSnippets) || [],
         sortDate: reliableDate,
       };
     })

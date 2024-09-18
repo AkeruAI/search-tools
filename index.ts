@@ -1,10 +1,11 @@
 import express from "express";
 import cors from "cors";
-import { SummaryTool } from "./tools/QroqSearchTool";
+import { SummaryTool } from "./tools/SummaryTool";
 import { gaia3point1 } from "./chat-models/gaia-llama3point1";
 import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./lib/swagger";
 import { port } from "./lib/serverConfig";
+import { gaiaGemma } from "./chat-models/gaia-gemma";
 
 const app = express();
 
@@ -36,7 +37,7 @@ function authenticateAPIKey(
 
 app.use(authenticateAPIKey);
 
-const groqSearchTool = new SummaryTool(gaia3point1);
+const groqSearchTool = new SummaryTool(gaiaGemma);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
