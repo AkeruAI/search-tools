@@ -15,6 +15,9 @@ export class SummaryTool {
   }
 
   private createPrompt(query: string, searchResults: any): [string, string][] {
+    const resultsWithoutIconsAndThumbnails = searchResults.map(
+      ({ icon, thumbnailSrc, ...rest }) => rest
+    );
     return [
       [
         "system",
@@ -23,7 +26,7 @@ export class SummaryTool {
       [
         "human",
         `The user's query was: "${query}". Here are the search results: ${JSON.stringify(
-          searchResults
+          resultsWithoutIconsAndThumbnails
         )}. 
 
 Provide a comprehensive answer to the user's query, addressing the main points and synthesizing information from multiple sources when applicable. Respond with only the text summary, without any additional formatting or structure.`,

@@ -6,10 +6,14 @@ export type SearchResult = {
   profile: {
     name: string;
     long_name: string;
+    img: string;
   };
   age: string;
   extra_snippets: string[];
   page_age?: string;
+  thumbnail?: {
+    src: string;
+  };
   article?: {
     date?: string;
   };
@@ -23,6 +27,8 @@ export type ProcessedResult = {
   date: string;
   summary: string;
   keyPoints: string[];
+  image: string;
+  thumbnailSrc?: string;
 };
 
 // Define a type for configuration options
@@ -107,12 +113,15 @@ export const processSearchResults = (
         date: reliableDate.toISOString().split("T")[0], // YYYY-MM-DD format
         summary: result.description,
         keyPoints: result.extra_snippets?.slice(0, minSnippets) || [],
+        icon: result.profile.img,
+        thumbnailSrc: result.thumbnail?.src,
         sortDate: reliableDate,
       };
     })
     .sort((a, b) => b.sortDate.getTime() - a.sortDate.getTime());
 
-  return mappedResults
-    .slice(0, maxResults)
-    .map(({ sortDate, ...rest }) => rest);
+  return mappedResults.slice(0, maxResults).map(({ sortDate, ...rest }) => ({
+    ...rest,
+    image: rest.thumbnailSrc || "",
+  }));
 };
